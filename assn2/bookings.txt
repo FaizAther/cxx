@@ -1,0 +1,10 @@
+Booking{id=0}:
+	Bike:		id=0,		bstatus=Booked,		type=Suzuki Bandit
+	Customer:	id=0,		bstatus=Booked,		lstatus=Has License
+			data={
+				Name:	A
+				Street:	BB
+				Postal:	CCC
+				City:	DDDD
+				Number:	E
+			}

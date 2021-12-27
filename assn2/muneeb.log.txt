@@ -1,0 +1,4 @@
+0.txt
+---
+Testing a simple customer and bike creating
+---

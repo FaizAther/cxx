@@ -1,0 +1,10 @@
+Booking{id=0}:
+	Bike:		id=0,		bstatus=Booked,		type=Kawasaki ZZR1400
+	Customer:	id=0,		bstatus=Booked,		lstatus=Has License
+			data={
+				Name:	Al-Ghazali
+				Street:	Enlightenment St.
+				Postal:	21012
+				City:	Persia
+				Number:	+44321
+			}

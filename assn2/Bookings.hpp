@@ -11,7 +11,7 @@
 class Bookings
 {
 private:
-    std::vector<Booking>    list;
+    std::vector<std::unique_ptr<Booking> >    list;
     std::ofstream           file;
     ID                      bookings;
     std::string             _filename;
@@ -29,20 +29,27 @@ public:
         file.open (_filename);
     }
 
-    inline bool
-    add(Bike &bike, Customer &customer)
+    bool
+    remove(ID rid)
     {
-        Booking booking = \
-            Booking(bookings, bike, customer);
-        return add(booking);
+        for (ID pos = 0; pos < list.size(); pos++) {
+            if (list[pos].get()->equal(rid)) {
+                write(list[pos].get()->finalized());
+                list.erase(list.begin() + pos);
+                return true;
+            }
+        }
+        return false;
     }
 
-    inline bool
-    add(Booking &booking)
+    bool
+    add(Bike &bike, Customer &customer)
     {
-        if (booking.valid()) {
-            list.push_back(booking);
-            write(booking.show());
+        std::unique_ptr<Booking> booking = \
+            std::unique_ptr<Booking>(new Booking(bookings, bike, customer));
+        if (booking.get()->valid()) {
+            write(booking.get()->show());
+            list.push_back(std::move(booking));
             bookings++;
             return true;
         }
@@ -59,11 +66,11 @@ public:
         wrote += snprintf(buf + wrote, BUF_BIG - wrote, \
             "BOOKINGS____{%zu}\n", list.size());
         printf("%s", buf);
-        for (Booking bkng: list) {
+        for (std::unique_ptr<Booking> &booking: list) {
             wrote = 0;
             bzero(buf, BUF_BIG);
             wrote += snprintf(buf + wrote, BUF_BIG - wrote, \
-                "pos@[%d]=>\t%s", i , bkng.show().c_str());
+                "pos@[%d]=>\t%s", i , booking.get()->show().c_str());
             printf("%s", buf);
             i++;
         }

@@ -105,6 +105,17 @@ public:
         wrote += snprintf(buf + wrote, BUF_SML - wrote, "}");
         return std::string(buf);
     }
+    
+    std::string
+    finalized()
+    {
+        char buf[BUF_SML];
+        bzero(buf, BUF_SML);
+        snprintf(buf, BUF_SML, \
+            "Bike {id=%u, name=%s}", \
+            id, type());
+        return std::string(buf);
+    }
 };
 
 #endif //BIKE_H

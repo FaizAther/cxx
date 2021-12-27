@@ -1,6 +1,6 @@
 CXX=clang++
 CXXFLAGS=-Wall -Werror -g -ggdb
-LDD=-std=c++17
+LDD=-std=c++11
 
 BINS=main.exe
 

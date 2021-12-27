@@ -151,6 +151,17 @@ public:
     {
         return id;
     }
+
+    std::string
+    finalized()
+    {
+        char buf[BUF_SML];
+        bzero(buf, BUF_SML);
+        snprintf(buf, BUF_SML, \
+            "Customer {id=%u, name=%s}", \
+            id, data[NAME].c_str());
+        return std::string(buf);
+    }
 };
 
 #endif //CUSTOMER_H

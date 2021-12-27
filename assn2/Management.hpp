@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#define BAD_ID      ~0
+#define BAD_ID      (ID)~0
 
 class Management
 {
@@ -21,15 +21,16 @@ private:
     static Bike
     scan_bikedata(ID cid)
     {
-        char line[BUF_SML], \
-            *ret = NULL;
+        char line[BUF_SML];/*, \
+            *ret = NULL;*/
         uint32_t btype = ~0;
         BikeType raw = XYZ;
 
         bzero(line, BUF_SML);
 
         printf("Model %s?: ", Bike::all_types().c_str());
-        ret = fgets(line, BUF_SML, stdin);
+        /*ret = */
+        fgets(line, BUF_SML, stdin);
         sscanf(line, "%d", &btype);
         if (btype <= XYZ && btype >= SUZ) {
             raw = BikeType(btype);
@@ -252,11 +253,19 @@ public:
         uint32_t bpos = _bfind_remove(store[0], false);
         uint32_t cpos = _cfind_remove(store[1], false);
 
-        if (bpos == BAD_ID || cpos == BAD_ID) {
+        if (bpos == BAD_ID || cpos == BAD_ID || \
+            !bookings.add(bikes.at(bpos), customers.at(cpos))) {
             return false;
         }
+        cfind_remove(store[0], true);
+        bfind_remove(store[1], true);
+        return true;
+    }
 
-        return bookings.add(bikes.at(bpos), customers.at(cpos));
+    inline bool
+    remove_booking(ID rid)
+    {
+        return bookings.remove(rid);
     }
 };
 

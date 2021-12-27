@@ -70,6 +70,7 @@ remove(Management &manage)
 {
 	char buf[BUF_SML] = {0}, \
 		val = ~0, *ret = NULL;
+	ID rid = BAD_ID;
 
 	do {
 		printf("Remove " \
@@ -79,14 +80,21 @@ remove(Management &manage)
 		ret = fgets(buf, BUF_SML, stdin);
 		sscanf(buf, "%c", &val);
 		switch (val) {
+			bzero(buf, 3);
 			case 'c':
-				//manage.make_customer();
+				ret = fgets(buf, 3, stdin);
+				sscanf(buf, "%d", &rid);
+				manage.cfind_remove(rid, true);
 				break;
 			case 'b':
-				//manage.make_bike();
+				ret = fgets(buf, 3, stdin);
+				sscanf(buf, "%d", &rid);
+				manage.bfind_remove(rid, true);
 				break;
 			case 'm':
-				//manage.make_booking();
+				ret = fgets(buf, 3, stdin);
+				sscanf(buf, "%d", &rid);
+				manage.remove_booking(rid);
 				break;
 			case 'x':
 				return;

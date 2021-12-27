@@ -3,6 +3,7 @@
 
 #include <string>
 #include <string.h>
+#include <memory>
 
 typedef uint32_t    ID;
 

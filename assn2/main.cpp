@@ -65,6 +65,17 @@ make(Management &manage)
 	} while (ret != NULL);
 }
 
+char *
+get_id(char *buf, ID &rid, const char *what)
+{
+	char *ret = NULL;
+	printf("Remove %s {id}:? ", what);
+	bzero(buf, 3);
+	ret = fgets(buf, 3, stdin);
+	sscanf(buf, "%d", &rid);
+	return ret;
+}
+
 void
 remove(Management &manage)
 {
@@ -80,20 +91,16 @@ remove(Management &manage)
 		ret = fgets(buf, BUF_SML, stdin);
 		sscanf(buf, "%c", &val);
 		switch (val) {
-			bzero(buf, 3);
 			case 'c':
-				ret = fgets(buf, 3, stdin);
-				sscanf(buf, "%d", &rid);
+				ret = get_id(buf, rid, "customer");
 				manage.cfind_remove(rid, true);
 				break;
 			case 'b':
-				ret = fgets(buf, 3, stdin);
-				sscanf(buf, "%d", &rid);
+				ret = get_id(buf, rid, "bike");
 				manage.bfind_remove(rid, true);
 				break;
 			case 'm':
-				ret = fgets(buf, 3, stdin);
-				sscanf(buf, "%d", &rid);
+				ret = get_id(buf, rid, "booking");
 				manage.remove_booking(rid);
 				break;
 			case 'x':

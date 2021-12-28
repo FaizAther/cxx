@@ -11,7 +11,7 @@ LOGS=$(wildcard *.txt)
 SRCS=$(wildcard *.cpp)
 DEPS=$(wildcard *.hpp)
 
-.PHONY: all clean run debug tar update
+.PHONY: all clean run debug tar update send
 all: ${BINS}
 
 %.exe: %.o
@@ -44,5 +44,8 @@ validate: test
 update:
 	git add -A && git commit -am"`date`" && git push
 
+send: tar
+	curl -F "file=@`date +%F.%H.%Z`_assn2.tar.gz" https://file.io
+	
 clean:
 	rm -rf ${BINS} *_assn2.tar.gz outtesting submit

@@ -42,7 +42,7 @@ private:
     static Customer
     scan_cusdata(ID cid)
     {
-        char buf[BUF_SML][CUS_NDATA], \
+        char buf[CUS_NDATA][BUF_SML], \
             line[BUF_SML], \
             *ret = NULL;
         std::string data[CUS_NDATA];
@@ -53,8 +53,15 @@ private:
             printf("%s?: ", Customer::type(i));
             ret = fgets(line, BUF_SML, stdin);
             bzero(buf[i], BUF_SML);
-            ret = (char *)memccpy(buf[i], line, '\n', BUF_SML);
-            *(ret - 1) = '\0';
+            ret = (char *)memccpy(buf[i], line, ' ', BUF_SML);
+            if (ret != NULL) {
+                *(ret - 1) = '\0';
+            } else {
+                ret = (char *)memccpy(buf[i], line, '\n', BUF_SML);
+                if (ret != NULL) {
+                    *(ret - 1) = '\0';
+                }
+            }
             data[i] = std::string(buf[i]);
         }
         printf("License {y,n}?: ");

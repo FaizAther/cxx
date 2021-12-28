@@ -3,6 +3,7 @@
 
 #include "Booking.hpp"
 
+#include <stdio.h>
 #include <fstream>
 #include <vector>
 
@@ -20,13 +21,55 @@ public:
     Bookings():
     bookings(0), _filename(DEFAULT_FILE)
     {
+        read(_filename.c_str());
         file.open(_filename);
+        dump();
     }
 
     Bookings(std::string xfilename): \
     bookings(0), _filename(xfilename)
     {
-        file.open (_filename);
+        read(_filename.c_str());
+        file.open(_filename);
+        dump();
+    }
+
+    void
+    read(const char *xname)
+    {
+        FILE *fbuf = fopen(xname, "r");
+        if (fbuf == NULL)
+            return;
+        char buf[BUF_BIG];
+        uint8_t nscan = 0;
+        ID xid = ~0;
+        char *ret = NULL;
+
+        do {
+            bzero(buf, BUF_BIG);
+            ret = fgets(buf, BUF_BIG, fbuf);
+            if (ret == NULL)
+                return;
+        
+            nscan = sscanf(buf, "Booking{id=%u}:\n", &xid);
+            if (nscan == 1) {
+                Bike *bik = Bike::unshow(fbuf);
+                if (bik == NULL)
+                    return;
+                Customer *cus = Customer::unshow(fbuf);
+                if (cus == NULL)
+                    return;
+                std::unique_ptr<Booking> booking = \
+                    std::unique_ptr<Booking>(make_booking(xid, bookings, *bik, *cus));
+                add(booking);
+                //add(*bik, *cus);
+            } else {
+                nscan = fscanf(fbuf, "Booking{id=%u}:\n", &xid);
+                if (nscan == 1)
+                    remove(xid);
+            }
+        } while (ret != NULL);
+        fclose(fbuf);
     }
 
     bool
@@ -42,11 +85,17 @@ public:
         return false;
     }
 
-    bool
-    add(Bike &bike, Customer &customer)
+    void
+    dump()
     {
-        std::unique_ptr<Booking> booking = \
-            std::unique_ptr<Booking>(new Booking(bookings, bike, customer));
+        for (auto &bk: list) {
+            write(bk.get()->show());
+        }
+    }
+
+    bool
+    add(std::unique_ptr<Booking> &booking)
+    {
         if (booking.get()->valid()) {
             write(booking.get()->show());
             list.push_back(std::move(booking));
@@ -54,6 +103,23 @@ public:
             return true;
         }
         return false;
+    }
+
+    static Booking *
+    make_booking(ID xid, ID &max, Bike &bike, Customer &customer)
+    {
+        if (xid > max) {
+            max = xid;
+        }
+        return new Booking(xid, bike, customer);
+    }
+
+    bool
+    add(Bike &bike, Customer &customer)
+    {
+        std::unique_ptr<Booking> booking = \
+            std::unique_ptr<Booking>(make_booking(bookings, bookings, bike, customer));
+        return add(booking);
     }
 
     void

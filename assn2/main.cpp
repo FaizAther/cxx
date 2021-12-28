@@ -141,6 +141,16 @@ reactor_loop(Management &manage)
 	} while (ret != NULL);
 }
 
+/*
+Bike b = Bike::unshow(std::string("\tBike:\t\tid=0,\t\tbstatus=(1,Booked),\t\ttype=(3,Kawasaki ZZR1400)"));
+
+printf("%s", b.show().c_str());
+
+Customer c = Customer::unshow(std::string("\tCustomer:\tid=0,\t\tbstatus=(1,Booked),\t\tlstatus=(0,HasLicense)\n\t\t\tdata={\n\t\t\t\tName:\tAl-Ghazali\n\t\t\t\tStreet:\tEnlightenmentSt.\n\t\t\t\tPostal:\t21012\n\t\t\t\tCity:\tPersia\n\t\t\t\tNumber:\t+44321\n}"));
+
+printf("%s", c.show().c_str());
+*/
+
 int
 main(void)
 {

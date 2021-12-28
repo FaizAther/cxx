@@ -70,7 +70,7 @@ public:
     {
         char buf[BUF_SML];
         bzero(buf, BUF_SML);
-        snprintf(buf, BUF_SML, "Booking{id=%u} with %s %s Finalized", \
+        snprintf(buf, BUF_SML, "FinalizedBooking{id=%u}:\n\t%s %s", \
             id, _customer.get()->finalized().c_str(), \
             _bike.get()->finalized().c_str());
         return std::string(buf);

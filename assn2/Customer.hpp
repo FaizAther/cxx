@@ -54,8 +54,8 @@ enum LicenseStatus
 };
 
 const char *LIS_STATS[] = { \
-    "Has License", \
-    "Does not have Licence", \
+    "HasLicense", \
+    "NoLicence", \
 };
 
 class Customer
@@ -78,6 +78,48 @@ public:
         }
     }
 
+/*
+	Customer:	id=0,		bstatus=(1,Booked),		lstatus=(0,HasLicense)
+			data={
+				Name:	Al-Ghazali
+				Street:	Enlightenment St.
+				Postal:	21012
+				City:	Persia
+				Number:	+44321
+			}
+*/
+    static Customer *
+    unshow(FILE *fbuf)
+    {
+        ID xid = ~0;
+        uint8_t ret = ~0;
+
+        char data[CUS_NDATA][BUF_SML];
+
+        for (uint8_t i = 0; i < CUS_NDATA; i++) {
+            bzero(data[i], BUF_SML);
+        }
+
+        ret = fscanf(fbuf, "\tCustomer:\t\tid=%u,\t\t" \
+            "bstatus=(1,Booked),\t\tlstatus=(0,HasLicense)\n" \
+            TAB4 "data={\n" \
+            TAB4 "\tName:\t%s\n" \
+            TAB4 "\tStreet:\t%s\n" \
+            TAB4 "\tPostal:\t%s\n" \
+            TAB4 "\tCity:\t%s\n" \
+            TAB4 "\tNumber:\t%s\n\t\t\t}", \
+            &xid, data[0], data[1], \
+            data[2], data[3], data[4]);
+        
+        if (ret != 6)
+            return NULL;
+
+        return new Customer(xid, \
+            CUST_DATA(data[0], data[1], data[2], \
+                data[3], data[4]), \
+            LicenseStatus(HAS));
+    }
+
     inline std::string
     show()
     {
@@ -86,12 +128,14 @@ public:
 
         bzero(buf, BUF_SIZ);
         wrote += snprintf(buf, BUF_SIZ,
-            "%s%d%s%s%s%s\n" TAB4 "data={\n", \
+            "%s%d%s%d,%s)%s%d,%s)\n" TAB4 "data={\n", \
             "Customer:\tid=",
             id,
-            ",\t\tbstatus=",
+            ",\t\tbstatus=(",
+            _bstatus,
             bstatus(),
-            ",\t\tlstatus=",
+            ",\t\tlstatus=(",
+            _lstatus,
             lstatus()
         );
 

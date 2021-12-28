@@ -4,10 +4,10 @@
 #include "Commons.hpp"
 
 const char *TYPES[] = { \
-    "Suzuki Bandit", \
-    "Honda TransAlp", \
-    "BMW F 650 GS", \
-    "Kawasaki ZZR1400", \
+    "Suzuki_Bandit", \
+    "Honda_TransAlp", \
+    "BMW_F_650_GS", \
+    "Kawasaki_ZZR1400", \
     "Undefined"
 };
 
@@ -39,17 +39,36 @@ public:
         return _sbook(_bstatus);
     }
 
+    static Bike *
+    unshow(FILE *fbuf)
+    {
+        ID xid = ~0;
+        uint32_t raw = XYZ;
+        uint8_t ret = ~0;
+
+        char thr[BUF_SML];
+
+        ret = fscanf(fbuf, "\tBike:\t\tid=%u,\t\t"
+            "bstatus=(1,Booked),\t\ttype=(%u,%s)\n", \
+            &xid, &raw, thr);
+        if (ret != 3)
+            return NULL;
+        return new Bike(xid, BikeType(raw));
+    }
+
     inline std::string
     show()
     {
         char buf[BUF_SIZ] = {0};
         bzero(buf, BUF_SIZ);
-        snprintf(buf, BUF_SIZ, "%s%d%s%s%s%s\n", \
+        snprintf(buf, BUF_SIZ, "%s%d%s%d,%s%s%d,%s)\n", \
             "Bike:\t\tid=",
             id,
-            ",\t\tbstatus=",
+            ",\t\tbstatus=(",
+            _bstatus,
             bstatus(),
-            ",\t\ttype=",
+            "),\t\ttype=(",
+            _type,
             type()
         );
         return std::string(buf);

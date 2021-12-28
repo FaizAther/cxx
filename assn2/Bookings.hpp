@@ -64,7 +64,7 @@ public:
                 add(booking);
                 //add(*bik, *cus);
             } else {
-                nscan = fscanf(fbuf, "Booking{id=%u}:\n", &xid);
+                nscan = fscanf(fbuf, "FinalizedBooking{id=%u}:\n", &xid);
                 if (nscan == 1)
                     remove(xid);
             }
